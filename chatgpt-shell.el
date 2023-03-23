@@ -48,6 +48,11 @@
   :type 'string
   :group 'chatgpt-shell)
 
+(defcustom chatgpt-shell-openai-timeout 60
+  "Timeout, in seconds,  for OpenAI API requests."
+  :type 'integer
+  :group 'chatgpt-shell)
+
 (defvar chatgpt-shell--input)
 
 (defvar chatgpt-shell--busy)
@@ -232,7 +237,7 @@ Used by `chatgpt-shell--send-input's call."
   (cl-assert chatgpt-shell-openai-key nil "`chatgpt-shell-openai-key' needs to be set with your key")
   (list "curl"
         "https://api.openai.com/v1/chat/completions"
-        "--fail" "--no-progress-meter" "-m" "30"
+        "--fail" "--no-progress-meter" "-m" (number-to-string chatgpt-shell-openai-timeout)
         "-H" "Content-Type: application/json"
         "-H" (format "Authorization: Bearer %s" key)
         "-d" (json-serialize `((model . "gpt-3.5-turbo")
